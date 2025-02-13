@@ -39,5 +39,9 @@ public class HotelController {
         return ResponseEntity.status(HttpStatus.OK).body(hotelsService.findById(id));
     }
 
-
+    @PostMapping("/hotels/{id}/amenities")
+    public ResponseEntity<Void> addAmenitiesToHotel(@PathVariable Long id, @RequestBody List<String> amenityNames) {
+        amenityService.addAmenitiesToHotel(id, amenityNames);
+        return ResponseEntity.ok().build();
+    }
 }
