@@ -1,6 +1,9 @@
-package com.example.hotelsapi.dto;
+package com.example.hotelsapi.dto.hotel;
 
 
+import com.example.hotelsapi.dto.address.AddressRequest;
+import com.example.hotelsapi.dto.arrival_time.ArrivalTimeRequest;
+import com.example.hotelsapi.dto.contacts.ContactsRequest;
 import lombok.*;
 
 import javax.validation.Valid;
