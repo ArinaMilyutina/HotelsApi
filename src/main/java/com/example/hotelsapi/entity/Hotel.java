@@ -4,6 +4,7 @@ package com.example.hotelsapi.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "hotels")
@@ -19,14 +20,16 @@ public class Hotel {
     private String description;
     private String brand;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "address_id")
     private Address address;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "contacts_id")
     private Contacts contacts;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "arrival_time_id")
     private ArrivalTime arrivalTime;
+
+    @ElementCollection(targetClass = Amenity.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "hotels_amenities", joinColumns = @JoinColumn(name = "hotels_id"))
+    private Set<Amenity> amenities;
 }
