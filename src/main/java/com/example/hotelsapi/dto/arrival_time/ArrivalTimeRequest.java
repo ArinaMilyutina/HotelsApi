@@ -1,4 +1,4 @@
-package com.example.hotelsapi.dto;
+package com.example.hotelsapi.dto.arrival_time;
 
 import lombok.*;
 
