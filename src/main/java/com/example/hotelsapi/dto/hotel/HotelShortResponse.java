@@ -1,10 +1,11 @@
-package com.example.hotelsapi.dto;
+package com.example.hotelsapi.dto.hotel;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelResponse {
+@Builder
+public class HotelShortResponse {
     private Long id;
     private String name;
     private String description;

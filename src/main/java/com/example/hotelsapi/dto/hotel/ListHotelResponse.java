@@ -1,4 +1,4 @@
-package com.example.hotelsapi.dto;
+package com.example.hotelsapi.dto.hotel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ListHotelResponse {
-    private List<HotelResponse> hotelResponseList;
+    private List<HotelShortResponse> hotelResponseList;
 }
