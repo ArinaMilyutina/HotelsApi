@@ -5,6 +5,8 @@ import com.example.hotelsapi.dto.arrival_time.ArrivalTimeResponse;
 import com.example.hotelsapi.dto.contacts.ContactsResponse;
 import com.example.hotelsapi.dto.hotel.*;
 import com.example.hotelsapi.entity.*;
+import com.example.hotelsapi.exception.HotelAlreadyExistsException;
+import com.example.hotelsapi.exception.HotelNotFoundException;
 import com.example.hotelsapi.mapper.HotelMapper;
 import com.example.hotelsapi.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class HotelService {
+    private static final String HOTEL_ALREADY_EXISTS = "The hotel with this telephone or email already exists!!!";
+    private static final String HOTEL_NOT_FOUND = "Hotel not found!!!";
+
+
+
     @Autowired
     private HotelRepository hotelRepository;
 
+
     public HotelShortResponse createHotel(CreateHotelRequest hotelRequest) {
         Hotel hotel = HotelMapper.INSTANCE.createHotelDtoToHotel(hotelRequest);
+        Optional<Hotel> hotelByPhone = hotelRepository.findHotelByContacts_Phone(hotel.getContacts().getPhone());
+        Optional<Hotel> hotelByEmail = hotelRepository.findHotelByContacts_Email(hotel.getContacts().getEmail());
+        if (hotelByPhone.isPresent() || hotelByEmail.isPresent()) {
+            throw new HotelAlreadyExistsException(HOTEL_ALREADY_EXISTS);
+        }
         hotelRepository.save(hotel);
         return createHotelResponse(hotel);
     }
@@ -28,16 +41,15 @@ public class HotelService {
     public ListHotelResponse findAll() {
         List<Hotel> hotelList = hotelRepository.findAll();
         if (hotelList.isEmpty()) {
-
+            throw new HotelNotFoundException(HOTEL_NOT_FOUND);
         }
         return createListHotelResponse(hotelList);
     }
 
-
     public HotelDetailedResponse findById(Long id) {
         Optional<Hotel> optionalHotel = hotelRepository.findById(id);
         if (optionalHotel.isEmpty()) {
-
+            throw new HotelNotFoundException(HOTEL_NOT_FOUND);
         }
         Hotel hotel = optionalHotel.get();
         Address address = hotel.getAddress();
@@ -81,7 +93,6 @@ public class HotelService {
                 .phone(hotel.getContacts().getPhone())
                 .build();
     }
-
     private ListHotelResponse createListHotelResponse(List<Hotel> hotelList) {
         List<HotelShortResponse> hotelResponse = hotelList.stream()
                 .map(this::createHotelResponse)
