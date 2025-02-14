@@ -26,10 +26,20 @@ public enum Amenity {
     public String toString() {
         return displayName;
     }
+
     public static Amenity fromDisplayName(String displayName) {
         return Arrays.stream(Amenity.values())
                 .filter(amenity -> amenity.getDisplayName().equalsIgnoreCase(displayName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No Amenity found with displayName: " + displayName));
+                .orElse(null);
+    }
+
+    public static boolean isValidAmenity(String amenityName) {
+        for (Amenity amenity : Amenity.values()) {
+            if (amenity.displayName.equalsIgnoreCase(amenityName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
