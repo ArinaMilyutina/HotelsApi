@@ -9,7 +9,9 @@ import com.example.hotelsapi.exception.HotelAlreadyExistsException;
 import com.example.hotelsapi.exception.HotelNotFoundException;
 import com.example.hotelsapi.mapper.HotelMapper;
 import com.example.hotelsapi.repository.HotelRepository;
+import com.example.hotelsapi.specifications.HotelSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,6 @@ import java.util.stream.Collectors;
 public class HotelService {
     private static final String HOTEL_ALREADY_EXISTS = "The hotel with this telephone or email already exists!!!";
     private static final String HOTEL_NOT_FOUND = "Hotel not found!!!";
-
 
 
     @Autowired
@@ -84,6 +85,15 @@ public class HotelService {
                 .build();
     }
 
+    public ListHotelResponse searchByCriteria(HotelSearchCriteria searchCriteria) {
+        Specification<Hotel> spec = HotelSpecifications.getHotelsByCriteria(searchCriteria);
+        List<Hotel> hotelList = hotelRepository.findAll(spec);
+        if (hotelList.isEmpty()) {
+            throw new HotelNotFoundException(HOTEL_NOT_FOUND);
+        }
+        return createListHotelResponse(hotelList);
+    }
+
     private HotelShortResponse createHotelResponse(Hotel hotel) {
         return HotelShortResponse.builder()
                 .id(hotel.getId())
@@ -93,6 +103,7 @@ public class HotelService {
                 .phone(hotel.getContacts().getPhone())
                 .build();
     }
+
     private ListHotelResponse createListHotelResponse(List<Hotel> hotelList) {
         List<HotelShortResponse> hotelResponse = hotelList.stream()
                 .map(this::createHotelResponse)

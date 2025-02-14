@@ -19,29 +19,33 @@ import java.util.List;
 @RequestMapping("/property-view")
 public class HotelController {
     @Autowired
-    private HotelService hotelsService;
+    private HotelService hotelService;
     @Autowired
     private AmenityService amenityService;
 
     @PostMapping("/hotels")
     public ResponseEntity<HotelShortResponse> createHotel(@Valid @RequestBody CreateHotelRequest createHotelRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(hotelsService.createHotel(createHotelRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(hotelService.createHotel(createHotelRequest));
     }
 
     @GetMapping("/hotels")
     public ResponseEntity<ListHotelResponse> findAll() {
-        return ResponseEntity.ok(hotelsService.findAll());
+        return ResponseEntity.ok(hotelService.findAll());
     }
 
 
     @GetMapping("/hotels/{id}")
     public ResponseEntity<HotelDetailedResponse> findById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(hotelsService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(hotelService.findById(id));
     }
 
     @PostMapping("/hotels/{id}/amenities")
     public ResponseEntity<Void> addAmenitiesToHotel(@PathVariable Long id, @RequestBody List<String> amenityNames) {
         amenityService.addAmenitiesToHotel(id, amenityNames);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/search")
+    public ResponseEntity<ListHotelResponse> searchByCriteria(HotelSearchCriteria searchCriteria) {
+        return ResponseEntity.ok(hotelService.searchByCriteria(searchCriteria));
     }
 }
