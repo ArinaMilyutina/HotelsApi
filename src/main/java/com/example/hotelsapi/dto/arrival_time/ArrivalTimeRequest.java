@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class ArrivalTimeRequest {
     @NotBlank(message = "Check in cannot be blank")
-    @Pattern(regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")
+    @Pattern(regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",message = "Uncorrected time format!!!")
     private String checkIn;
     private String checkOut;
 }
