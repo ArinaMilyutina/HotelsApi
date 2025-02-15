@@ -55,9 +55,7 @@ search hotel by criteria, add amenities to the hotel and count hotels by paramet
 				}
 		}
 
-##### 2. GET, URL:http://localhost:8092/property-view/hotels/{id}
-
-##### 3. POST, URL:http://localhost:8092/property-view/hotels/{id}/amenities
+##### 2. POST, URL:http://localhost:8092/property-view/hotels/{id}/amenities
 
     json:
     
@@ -73,6 +71,8 @@ search hotel by criteria, add amenities to the hotel and count hotels by paramet
       "Business center",
       "Meeting rooms"
     ]
+
+##### 3. GET, URL:http://localhost:8092/property-view/hotels/{id}
 
 ##### 4. GET, URL:http://localhost:8092/property-view/search?city=minsk (name, brand, city, county, amenities)
 
