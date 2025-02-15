@@ -14,21 +14,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class HotelService {
     private static final String HOTEL_ALREADY_EXISTS = "The hotel with this telephone or email already exists!!!";
-    private static final String HOTEL_NOT_FOUND = "Hotel not found!!!";
+    private static final String HOTEL_NOT_FOUND = "Hotel wasn't  found!!!";
+    private static final String INFORMATION_NOT_FOUND = "Information about your parameters wasn't found!!!";
+    private static final String INVALID_PARAMETER = "Invalid parameter: ";
+    private static final String BRAND = "brand";
+    private static final String CITY = "city";
+    private static final String COUNTY = "county";
+    private static final String AMENITIES = "amenities";
 
 
     @Autowired
     private HotelRepository hotelRepository;
 
 
-    public HotelShortResponse createHotel(CreateHotelRequest hotelRequest) {
+    public HotelShortResponse createHotel(HotelCreateRequest hotelRequest) {
         Hotel hotel = HotelMapper.INSTANCE.createHotelDtoToHotel(hotelRequest);
         Optional<Hotel> hotelByPhone = hotelRepository.findHotelByContacts_Phone(hotel.getContacts().getPhone());
         Optional<Hotel> hotelByEmail = hotelRepository.findHotelByContacts_Email(hotel.getContacts().getEmail());
@@ -92,6 +100,28 @@ public class HotelService {
             throw new HotelNotFoundException(HOTEL_NOT_FOUND);
         }
         return createListHotelResponse(hotelList);
+    }
+
+    public Map<String, Long> getHistogram(String param) {
+        List<HotelCountRequest> hotelCountRequests;
+        switch (param.toLowerCase()) {
+            case BRAND -> hotelCountRequests = hotelRepository.countHotelByBrand();
+            case CITY -> hotelCountRequests = hotelRepository.countHotelByAddress_City();
+            case COUNTY -> hotelCountRequests = hotelRepository.countHotelByAddress_County();
+            case AMENITIES -> hotelCountRequests = hotelRepository.countHotelByAmenities();
+            default -> throw new IllegalArgumentException(INVALID_PARAMETER + param);
+        }
+        Map<String, Long> histogram = new HashMap<>();
+        if (hotelCountRequests != null) {
+            for (HotelCountRequest result : hotelCountRequests) {
+                histogram.put(result.getValue(), result.getCount());
+            }
+        }
+        if (histogram.isEmpty()) {
+            throw new HotelNotFoundException(INFORMATION_NOT_FOUND);
+        }
+
+        return histogram;
     }
 
     private HotelShortResponse createHotelResponse(Hotel hotel) {
