@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/property-view")
@@ -24,7 +25,7 @@ public class HotelController {
     private AmenityService amenityService;
 
     @PostMapping("/hotels")
-    public ResponseEntity<HotelShortResponse> createHotel(@Valid @RequestBody CreateHotelRequest createHotelRequest) {
+    public ResponseEntity<HotelShortResponse> createHotel(@Valid @RequestBody HotelCreateRequest createHotelRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(hotelService.createHotel(createHotelRequest));
     }
 
@@ -44,8 +45,15 @@ public class HotelController {
         amenityService.addAmenitiesToHotel(id, amenityNames);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/search")
     public ResponseEntity<ListHotelResponse> searchByCriteria(HotelSearchCriteria searchCriteria) {
         return ResponseEntity.ok(hotelService.searchByCriteria(searchCriteria));
+    }
+
+    @GetMapping("/histogram/{param}")
+    public ResponseEntity<Map<String, Long>> getHistogram(@PathVariable String param) {
+        Map<String, Long> histogram = hotelService.getHistogram(param);
+        return ResponseEntity.ok(histogram);
     }
 }
