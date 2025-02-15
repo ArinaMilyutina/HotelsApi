@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateHotelRequest {
+public class HotelCreateRequest {
     @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 70, message = "Name must be between 2 and 70 characters")
     private String name;
