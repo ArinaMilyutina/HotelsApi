@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AmenityService {
-    private static final String HOTEL_NOT_FOUND = "Hotel not found!!!";
+    private static final String HOTEL_NOT_FOUND = "Hotel wasn't found!!!";
     private static final String INVALID_AMENITIES = "Invalid amenity value: ";
 
     @Autowired
