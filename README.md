@@ -22,8 +22,7 @@ search hotel by criteria, add amenities to the hotel and count hotels by paramet
 
 1. git clone https://github.com/ArinaMilyutina/HotelsApi
 2. cd HotelsApi
-3. mvn clean install
-4. mvn spring-boot:run
+3. mvn spring-boot:run
 
 ## **Collection of request for testing (Postman):**
 
